@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.redisson" level="ERROR"/>
+    <logger name="org.testcontainers" level="ERROR"/>
+    <logger name="org.apache.hc" level="ERROR"/>
+    <logger name="com.github" level="ERROR"/>
+    <logger name="io.netty" level="ERROR"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
