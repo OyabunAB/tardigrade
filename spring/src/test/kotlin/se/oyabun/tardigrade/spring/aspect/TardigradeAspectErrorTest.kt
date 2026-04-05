@@ -50,8 +50,7 @@ class TardigradeAspectErrorTest {
             Mono.error(RuntimeException("test error"))
 
         @WithCircuitBreaker("blocking-error-cb")
-        open fun blockingThrowsException(): String =
-            throw RuntimeException("test error")
+        open fun blockingThrowsException(): String = error("test error")
     }
 
     @Autowired

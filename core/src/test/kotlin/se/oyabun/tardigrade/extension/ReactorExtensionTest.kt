@@ -48,11 +48,7 @@ class ReactorExtensionTest {
                     2,
                 ) {
                     runCatching {
-                        cb.execute {
-                            throw RuntimeException(
-                                "trip",
-                            )
-                        }
+                        cb.execute { error("trip") }
                     }
                 }
             }

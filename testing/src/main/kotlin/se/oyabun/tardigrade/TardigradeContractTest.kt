@@ -188,13 +188,8 @@ abstract class TardigradeContractTest {
                 .concatMap { succeeds ->
                     mono {
                         circuitBreaker["cb-trip"].execute {
-                            if (succeeds) {
-                                "ok"
-                            } else {
-                                throw RuntimeException(
-                                    "fail",
-                                )
-                            }
+                            if (succeeds) "ok"
+                            else error("expected failure")
                         }
                     }.onErrorResume { empty() }
                 }.then(mono { circuitBreaker["cb-trip"].state() })
@@ -207,9 +202,7 @@ abstract class TardigradeContractTest {
                 .concatMap {
                     mono {
                         circuitBreaker["cb-reject"].execute {
-                            throw RuntimeException(
-                                "fail",
-                            )
+                            error("expected failure")
                         }
                     }.onErrorResume { empty() }
                 }.then(
@@ -233,9 +226,7 @@ abstract class TardigradeContractTest {
                 .flatMap {
                     mono {
                         circuitBreaker["cb-concurrent"].execute {
-                            throw RuntimeException(
-                                "fail",
-                            )
+                            error("fail")
                         }
                     }.onErrorResume { empty() }
                 }.sequential()
@@ -251,9 +242,7 @@ abstract class TardigradeContractTest {
                 .flatMap {
                     mono {
                         circuitBreaker["cb-reads"].execute {
-                            throw RuntimeException(
-                                "fail",
-                            )
+                            error("fail")
                         }
                     }.onErrorResume { empty() }
                 }.sequential()
@@ -379,11 +368,8 @@ abstract class TardigradeContractTest {
                             "ok"
                         }
                     }.map {
-                        if (it is BulkheadOutcome.Ok<*>) {
-                            it.value
-                        } else {
-                            "rejected"
-                        }
+                        if (it is BulkheadOutcome.Ok<String>) it.value
+                        else "rejected"
                     }
                 }.collectList()
 
@@ -429,7 +415,7 @@ abstract class TardigradeContractTest {
         val cb = circuitBreaker["ext-mono-cb-open"]
         val pipeline =
             Mono
-                .error<String>(RuntimeException("fail"))
+                .error<String>(RuntimeException("failure"))
                 .withCircuitBreaker(cb)
                 .onErrorResume { empty() }
                 .then(Mono.just("next").withCircuitBreaker(cb))

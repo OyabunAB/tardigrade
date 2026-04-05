@@ -61,7 +61,7 @@ class FlowExtensionTest {
                 )
             repeat(
                 2,
-            ) { runCatching { cb.execute { throw RuntimeException("trip") } } }
+            ) { runCatching { cb.execute { error("trip") } } }
 
             val result = flowOf("value").withCircuitBreaker(cb).toList()
             assertEquals(listOf(CircuitBreakerOutcome.Open), result)
@@ -132,7 +132,7 @@ class FlowExtensionTest {
             val result =
                 flow {
                     attempts++
-                    if (attempts < 3) throw RuntimeException("not yet")
+                    if (attempts < 3) error("not yet")
                     emit("success")
                 }.withRetry(
                     InMemoryRetry(
@@ -150,7 +150,7 @@ class FlowExtensionTest {
     fun `withRetry propagates error after exhausting attempts`() {
         runBlocking {
             assertFailsWith<RetryExhaustedException> {
-                flow<String> { throw RuntimeException("always fails") }
+                flow<String> { error("always fails") }
                     .withRetry(
                         InMemoryRetry(
                             "flow-retry-2",

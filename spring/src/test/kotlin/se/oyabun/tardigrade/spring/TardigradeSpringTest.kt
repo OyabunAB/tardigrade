@@ -41,8 +41,7 @@ class TardigradeSpringTest {
 
     open class Service {
         @WithCircuitBreaker("shared-cb")
-        open fun failingCall(): String =
-            throw RuntimeException("failure")
+        open fun failingCall(): String = error("failure")
 
         @WithCircuitBreaker("shared-cb")
         open fun successCall(): String = "ok"
