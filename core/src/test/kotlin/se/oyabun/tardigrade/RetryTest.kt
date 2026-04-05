@@ -43,7 +43,7 @@ class RetryTest {
             val outcome =
                 retry.execute {
                     attempts++
-                    if (attempts < 3) throw RuntimeException("not yet")
+                    if (attempts < 3) error("not yet")
                     "success"
                 }
             assertEquals(RetryOutcome.Ok("success"), outcome)
@@ -63,7 +63,7 @@ class RetryTest {
             val outcome =
                 retry.execute {
                     attempts++
-                    throw RuntimeException("always fails")
+                    error("always fails")
                 }
             assertIs<RetryOutcome.Exhausted>(outcome)
             assertEquals(3, attempts)
@@ -105,7 +105,7 @@ class RetryTest {
                 measureTime {
                     retry.execute {
                         counter.incrementAndGet()
-                        throw RuntimeException("fail")
+                        error("expected failure")
                     }
                 }
             val expectedMinimum =

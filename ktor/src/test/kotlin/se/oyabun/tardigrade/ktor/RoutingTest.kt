@@ -64,7 +64,7 @@ class RoutingTest {
         runBlocking {
             repeat(
                 2,
-            ) { runCatching { cb.execute { throw RuntimeException() } } }
+            ) { runCatching { cb.execute { error("failure") } } }
         }
         testApplication {
             application {
@@ -95,7 +95,7 @@ class RoutingTest {
         runBlocking {
             repeat(
                 2,
-            ) { runCatching { cb.execute { throw RuntimeException() } } }
+            ) { runCatching { cb.execute { error("failure") } } }
         }
         testApplication {
             application {

@@ -94,23 +94,19 @@ class TardigradeAspectTest {
         @WithRetry(RETRY)
         open fun retryBlock(): String {
             val n = _retryAttempts.incrementAndGet()
-            if (n < 3) throw RuntimeException("not yet")
+            if (n < 3) error("not yet")
             return "ok"
         }
 
         @WithRetry(RETRY_FAIL)
-        open fun retryFailBlock(): String =
-            throw RuntimeException("always fails")
+        open fun retryFailBlock(): String = error("always fails")
 
         @WithRetry(RETRY)
         open fun retryMono(): Mono<String> =
             Mono.defer {
                 val n = _retryAttempts.incrementAndGet()
-                if (n < 3) {
-                    Mono.error(RuntimeException("not yet"))
-                } else {
-                    Mono.just("ok")
-                }
+                if (n < 3) Mono.error(RuntimeException("not yet"))
+                else Mono.just("ok")
             }
 
         @WithRetry(RETRY_FAIL)
@@ -134,7 +130,7 @@ class TardigradeAspectTest {
         runBlocking {
             repeat(
                 2,
-            ) { runCatching { openCb.execute { throw RuntimeException() } } }
+            ) { runCatching { openCb.execute { error("failure") } } }
         }
 
         Tardigrade.define.rateLimiter(
