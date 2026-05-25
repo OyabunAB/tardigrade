@@ -8,8 +8,6 @@ on:
 jobs:
   publish:
     runs-on: oybn-kubernetes-pod
-    container:
-      image: ghcr.io/actions/actions-runner:latest
 
     permissions:
       contents: read
