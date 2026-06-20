@@ -15,7 +15,7 @@ kotlin-logging     = "7.0.3"
 slf4j              = "2.0.17"
 logback            = "1.5.32"
 spring-boot        = "4.0.5"
-aspectj            = "1.9.22.1"
+aspectj            = "1.9.25.1"
 [libraries]
 kotlin-test              = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 junit-jupiter            = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
